@@ -15,10 +15,10 @@ return [
 	'version' => '1.0.0',
 	'type' => 'licenses',
 	'hooks' => [
-		'function.requirements' => ['Detain\MyAdminXen\Plugin', 'Requirements'],
+		/*'function.requirements' => ['Detain\MyAdminXen\Plugin', 'Requirements'],
 		'licenses.settings' => ['Detain\MyAdminXen\Plugin', 'Settings'],
 		'licenses.activate' => ['Detain\MyAdminXen\Plugin', 'Activate'],
 		'licenses.change_ip' => ['Detain\MyAdminXen\Plugin', 'ChangeIp'],
-		'ui.menu' => ['Detain\MyAdminXen\Plugin', 'Menu']
+		'ui.menu' => ['Detain\MyAdminXen\Plugin', 'Menu'] */
 	],
 ];
