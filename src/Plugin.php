@@ -1,0 +1,81 @@
+<?php
+
+namespace Detain\MyAdminXen;
+
+use Detain\Xen\Xen;
+use Symfony\Component\EventDispatcher\GenericEvent;
+
+class Plugin {
+
+	public function __construct() {
+	}
+
+	public static function Activate(GenericEvent $event) {
+		// will be executed when the licenses.license event is dispatched
+		$license = $event->getSubject();
+		if ($event['category'] == SERVICE_TYPES_FANTASTICO) {
+			myadmin_log('licenses', 'info', 'Xen Activation', __LINE__, __FILE__);
+			function_requirements('activate_xen');
+			activate_xen($license->get_ip(), $event['field1']);
+			$event->stopPropagation();
+		}
+	}
+
+	public static function ChangeIp(GenericEvent $event) {
+		if ($event['category'] == SERVICE_TYPES_FANTASTICO) {
+			$license = $event->getSubject();
+			$settings = get_module_settings('licenses');
+			$xen = new Xen(FANTASTICO_USERNAME, FANTASTICO_PASSWORD);
+			myadmin_log('licenses', 'info', "IP Change - (OLD:".$license->get_ip().") (NEW:{$event['newip']})", __LINE__, __FILE__);
+			$result = $xen->editIp($license->get_ip(), $event['newip']);
+			if (isset($result['faultcode'])) {
+				myadmin_log('licenses', 'error', 'Xen editIp('.$license->get_ip().', '.$event['newip'].') returned Fault '.$result['faultcode'].': '.$result['fault'], __LINE__, __FILE__);
+				$event['status'] = 'error';
+				$event['status_text'] = 'Error Code '.$result['faultcode'].': '.$result['fault'];
+			} else {
+				$GLOBALS['tf']->history->add($settings['TABLE'], 'change_ip', $event['newip'], $license->get_ip());
+				$license->set_ip($event['newip'])->save();
+				$event['status'] = 'ok';
+				$event['status_text'] = 'The IP Address has been changed.';
+			}
+			$event->stopPropagation();
+		}
+	}
+
+	public static function Menu(GenericEvent $event) {
+		// will be executed when the licenses.settings event is dispatched
+		$menu = $event->getSubject();
+		$module = 'licenses';
+		if ($GLOBALS['tf']->ima == 'admin') {
+			$menu->add_link($module, 'choice=none.reusable_xen', 'icons/database_warning_48.png', 'ReUsable Xen Licenses');
+			$menu->add_link($module, 'choice=none.xen_list', 'icons/database_warning_48.png', 'Xen Licenses Breakdown');
+			$menu->add_link($module.'api', 'choice=none.xen_licenses_list', 'whm/createacct.gif', 'List all Xen Licenses');
+		}
+	}
+
+	public static function Requirements(GenericEvent $event) {
+		// will be executed when the licenses.loader event is dispatched
+		$loader = $event->getSubject();
+		$loader->add_requirement('crud_xen_list', '/../vendor/detain/crud/src/crud/crud_xen_list.php');
+		$loader->add_requirement('crud_reusable_xen', '/../vendor/detain/crud/src/crud/crud_reusable_xen.php');
+		$loader->add_requirement('get_xen_licenses', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
+		$loader->add_requirement('get_xen_list', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
+		$loader->add_requirement('xen_licenses_list', '/../vendor/detain/myadmin-xen-vps/src/xen_licenses_list.php');
+		$loader->add_requirement('xen_list', '/../vendor/detain/myadmin-xen-vps/src/xen_list.php');
+		$loader->add_requirement('get_available_xen', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
+		$loader->add_requirement('activate_xen', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
+		$loader->add_requirement('get_reusable_xen', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
+		$loader->add_requirement('reusable_xen', '/../vendor/detain/myadmin-xen-vps/src/reusable_xen.php');
+		$loader->add_requirement('class.Xen', '/../vendor/detain/xen-vps/src/Xen.php');
+		$loader->add_requirement('vps_add_xen', '/vps/addons/vps_add_xen.php');
+	}
+
+	public static function Settings(GenericEvent $event) {
+		// will be executed when the licenses.settings event is dispatched
+		$settings = $event->getSubject();
+		$settings->add_text_setting('licenses', 'Xen', 'xen_username', 'Xen Username:', 'Xen Username', $settings->get_setting('FANTASTICO_USERNAME'));
+		$settings->add_text_setting('licenses', 'Xen', 'xen_password', 'Xen Password:', 'Xen Password', $settings->get_setting('FANTASTICO_PASSWORD'));
+		$settings->add_dropdown_setting('licenses', 'Xen', 'outofstock_licenses_xen', 'Out Of Stock Xen Licenses', 'Enable/Disable Sales Of This Type', $settings->get_setting('OUTOFSTOCK_LICENSES_FANTASTICO'), array('0', '1'), array('No', 'Yes', ));
+	}
+
+}
