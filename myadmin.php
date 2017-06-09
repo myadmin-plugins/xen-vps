@@ -15,8 +15,8 @@ return [
 	'version' => '1.0.0',
 	'type' => 'service',
 	'hooks' => [
-		/*'function.requirements' => ['Detain\MyAdminXen\Plugin', 'Requirements'],
 		'vps.settings' => ['Detain\MyAdminXen\Plugin', 'Settings'],
+		/*'function.requirements' => ['Detain\MyAdminXen\Plugin', 'Requirements'],
 		'vps.activate' => ['Detain\MyAdminXen\Plugin', 'Activate'],
 		'vps.change_ip' => ['Detain\MyAdminXen\Plugin', 'ChangeIp'],
 		'ui.menu' => ['Detain\MyAdminXen\Plugin', 'Menu'] */

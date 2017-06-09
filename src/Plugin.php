@@ -71,11 +71,11 @@ class Plugin {
 	}
 
 	public static function Settings(GenericEvent $event) {
-		// will be executed when the licenses.settings event is dispatched
+		$module = 'vps';
 		$settings = $event->getSubject();
-		$settings->add_text_setting('licenses', 'Xen', 'xen_username', 'Xen Username:', 'Xen Username', $settings->get_setting('FANTASTICO_USERNAME'));
-		$settings->add_text_setting('licenses', 'Xen', 'xen_password', 'Xen Password:', 'Xen Password', $settings->get_setting('FANTASTICO_PASSWORD'));
-		$settings->add_dropdown_setting('licenses', 'Xen', 'outofstock_licenses_xen', 'Out Of Stock Xen Licenses', 'Enable/Disable Sales Of This Type', $settings->get_setting('OUTOFSTOCK_LICENSES_FANTASTICO'), array('0', '1'), array('No', 'Yes', ));
+		$settings->add_text_setting($module, 'Slice Costs', 'vps_slice_xen_cost', 'XEN VPS Cost Per Slice:', 'XEN VPS will cost this much for 1 slice.', $settings->get_setting('VPS_SLICE_XEN_COST'));
+		$settings->add_select_master($module, 'Default Servers', $module, 'new_vps_xen_server', 'Xen NJ Server', (defined('NEW_VPS_XEN_SERVER') ? NEW_VPS_XEN_SERVER : ''), 8, 1);
+		$settings->add_dropdown_setting($module, 'Out of Stock', 'outofstock_xen', 'Out Of Stock Xen Secaucus', 'Enable/Disable Sales Of This Type', $settings->get_setting('OUTOFSTOCK_XEN'), array('0', '1'), array('No', 'Yes', ));
 	}
 
 }
