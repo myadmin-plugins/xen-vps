@@ -7,7 +7,20 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Plugin {
 
+	public static $name = 'Xen Vps';
+	public static $description = 'Allows selling of Xen Server and VPS License Types.  More info at https://www.netenberg.com/xen.php';
+	public static $help = 'It provides more than one million end users the ability to quickly install dozens of the leading open source content management systems into their web space.  	Must have a pre-existing cPanel license with cPanelDirect to purchase a xen license. Allow 10 minutes for activation.';
+	public static $module = 'vps';
+	public static $type = 'service';
+
+
 	public function __construct() {
+	}
+
+	public static function Hooks() {
+		return [
+			'vps.settings' => ['Detain\MyAdminXen\Plugin', 'Settings'],
+		];
 	}
 
 	public static function Activate(GenericEvent $event) {
