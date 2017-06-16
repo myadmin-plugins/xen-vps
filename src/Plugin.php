@@ -19,7 +19,7 @@ class Plugin {
 
 	public static function Hooks() {
 		return [
-			'vps.settings' => ['Detain\MyAdminXen\Plugin', 'Settings'],
+			'vps.settings' => [__CLASS__, 'Settings'],
 		];
 	}
 
