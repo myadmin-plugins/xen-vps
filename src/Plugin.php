@@ -26,7 +26,7 @@ class Plugin {
 	public static function getActivate(GenericEvent $event) {
 		$license = $event->getSubject();
 		if ($event['category'] == SERVICE_TYPES_FANTASTICO) {
-			myadmin_log('licenses', 'info', 'Xen Activation', __LINE__, __FILE__);
+			myadmin_log(self::$module, 'info', 'Xen Activation', __LINE__, __FILE__);
 			function_requirements('activate_xen');
 			activate_xen($license->get_ip(), $event['field1']);
 			$event->stopPropagation();
@@ -36,12 +36,12 @@ class Plugin {
 	public static function getChangeIp(GenericEvent $event) {
 		if ($event['category'] == SERVICE_TYPES_FANTASTICO) {
 			$license = $event->getSubject();
-			$settings = get_module_settings('licenses');
+			$settings = get_module_settings(self::$module);
 			$xen = new Xen(FANTASTICO_USERNAME, FANTASTICO_PASSWORD);
-			myadmin_log('licenses', 'info', "IP Change - (OLD:".$license->get_ip().") (NEW:{$event['newip']})", __LINE__, __FILE__);
+			myadmin_log(self::$module, 'info', "IP Change - (OLD:".$license->get_ip().") (NEW:{$event['newip']})", __LINE__, __FILE__);
 			$result = $xen->editIp($license->get_ip(), $event['newip']);
 			if (isset($result['faultcode'])) {
-				myadmin_log('licenses', 'error', 'Xen editIp('.$license->get_ip().', '.$event['newip'].') returned Fault '.$result['faultcode'].': '.$result['fault'], __LINE__, __FILE__);
+				myadmin_log(self::$module, 'error', 'Xen editIp('.$license->get_ip().', '.$event['newip'].') returned Fault '.$result['faultcode'].': '.$result['fault'], __LINE__, __FILE__);
 				$event['status'] = 'error';
 				$event['status_text'] = 'Error Code '.$result['faultcode'].': '.$result['fault'];
 			} else {
@@ -56,11 +56,10 @@ class Plugin {
 
 	public static function getMenu(GenericEvent $event) {
 		$menu = $event->getSubject();
-		$module = 'licenses';
 		if ($GLOBALS['tf']->ima == 'admin') {
-			$menu->add_link($module, 'choice=none.reusable_xen', 'icons/database_warning_48.png', 'ReUsable Xen Licenses');
-			$menu->add_link($module, 'choice=none.xen_list', 'icons/database_warning_48.png', 'Xen Licenses Breakdown');
-			$menu->add_link($module.'api', 'choice=none.xen_licenses_list', 'whm/createacct.gif', 'List all Xen Licenses');
+			$menu->add_link(self::$module, 'choice=none.reusable_xen', 'icons/database_warning_48.png', 'ReUsable Xen Licenses');
+			$menu->add_link(self::$module, 'choice=none.xen_list', 'icons/database_warning_48.png', 'Xen Licenses Breakdown');
+			$menu->add_link(self::$module.'api', 'choice=none.xen_licenses_list', 'whm/createacct.gif', 'List all Xen Licenses');
 		}
 	}
 
@@ -81,11 +80,10 @@ class Plugin {
 	}
 
 	public static function getSettings(GenericEvent $event) {
-		$module = 'vps';
 		$settings = $event->getSubject();
-		$settings->add_text_setting($module, 'Slice Costs', 'vps_slice_xen_cost', 'XEN VPS Cost Per Slice:', 'XEN VPS will cost this much for 1 slice.', $settings->get_setting('VPS_SLICE_XEN_COST'));
-		$settings->add_select_master($module, 'Default Servers', $module, 'new_vps_xen_server', 'Xen NJ Server', (defined('NEW_VPS_XEN_SERVER') ? NEW_VPS_XEN_SERVER : ''), 8, 1);
-		$settings->add_dropdown_setting($module, 'Out of Stock', 'outofstock_xen', 'Out Of Stock Xen Secaucus', 'Enable/Disable Sales Of This Type', $settings->get_setting('OUTOFSTOCK_XEN'), array('0', '1'), array('No', 'Yes',));
+		$settings->add_text_setting(self::$module, 'Slice Costs', 'vps_slice_xen_cost', 'XEN VPS Cost Per Slice:', 'XEN VPS will cost this much for 1 slice.', $settings->get_setting('VPS_SLICE_XEN_COST'));
+		$settings->add_select_master(self::$module, 'Default Servers', $module, 'new_vps_xen_server', 'Xen NJ Server', (defined('NEW_VPS_XEN_SERVER') ? NEW_VPS_XEN_SERVER : ''), 8, 1);
+		$settings->add_dropdown_setting(self::$module, 'Out of Stock', 'outofstock_xen', 'Out Of Stock Xen Secaucus', 'Enable/Disable Sales Of This Type', $settings->get_setting('OUTOFSTOCK_XEN'), array('0', '1'), array('No', 'Yes',));
 	}
 
 }
