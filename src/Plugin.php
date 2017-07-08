@@ -7,9 +7,9 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 
 class Plugin {
 
-	public static $name = 'Xen Vps';
-	public static $description = 'Allows selling of Xen Server and VPS License Types.  More info at https://www.netenberg.com/xen.php';
-	public static $help = 'It provides more than one million end users the ability to quickly install dozens of the leading open source content management systems into their web space.  	Must have a pre-existing cPanel license with cPanelDirect to purchase a xen license. Allow 10 minutes for activation.';
+	public static $name = 'Xen VPS';
+	public static $description = 'Allows selling of Xen VPS Types.  The Xen Project hypervisor is an open-source type-1 or baremetal hypervisor, which makes it possible to run many instances of an operating system or indeed different operating systems in parallel on a single machine (or host). The Xen Project hypervisor is the only type-1 hypervisor that is available as open source. It is used as the basis for a number of different commercial and open source applications, such as: server virtualization, Infrastructure as a Service (IaaS), desktop virtualization, security applications, embedded and hardware appliances. The Xen Project hypervisor is powering the largest clouds in production today.  More info at https://www.xenproject.org/';
+	public static $help = '';
 	public static $module = 'vps';
 	public static $type = 'service';
 
@@ -20,12 +20,13 @@ class Plugin {
 	public static function getHooks() {
 		return [
 			self::$module.'.settings' => [__CLASS__, 'getSettings'],
+			self::$module.'.deactivate' => [__CLASS__, 'getDeactivate'],
 		];
 	}
 
 	public static function getActivate(GenericEvent $event) {
 		$serviceClass = $event->getSubject();
-		if ($event['category'] == SERVICE_TYPES_FANTASTICO) {
+		if ($event['category'] == SERVICE_TYPES_XEN_LINUX || $event['category'] == SERVICE_TYPES_XEN_WINDOWS) {
 			myadmin_log(self::$module, 'info', 'Xen Activation', __LINE__, __FILE__);
 			function_requirements('activate_xen');
 			activate_xen($serviceClass->getIp(), $event['field1']);
@@ -33,8 +34,16 @@ class Plugin {
 		}
 	}
 
+	public static function getDeactivate(GenericEvent $event) {
+		if ($event['category'] == SERVICE_TYPES_XEN_LINUX || $event['category'] == SERVICE_TYPES_XEN_WINDOWS) {
+			myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__);
+			$serviceClass = $event->getSubject();
+			$GLOBALS['tf']->history->add(self::$module.'queue', $serviceClass->getId(), 'delete', '', $serviceClass->getCustid());
+		}
+	}
+
 	public static function getChangeIp(GenericEvent $event) {
-		if ($event['category'] == SERVICE_TYPES_FANTASTICO) {
+		if ($event['category'] == SERVICE_TYPES_XEN_LINUX || $event['category'] == SERVICE_TYPES_XEN_WINDOWS) {
 			$serviceClass = $event->getSubject();
 			$settings = get_module_settings(self::$module);
 			$xen = new Xen(FANTASTICO_USERNAME, FANTASTICO_PASSWORD);
