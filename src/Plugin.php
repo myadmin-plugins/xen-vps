@@ -20,22 +20,21 @@ class Plugin {
 	public static function getHooks() {
 		return [
 			self::$module.'.settings' => [__CLASS__, 'getSettings'],
+			//self::$module.'.activate' => [__CLASS__, 'getActivate'],
 			self::$module.'.deactivate' => [__CLASS__, 'getDeactivate'],
 		];
 	}
 
 	public static function getActivate(GenericEvent $event) {
 		$serviceClass = $event->getSubject();
-		if ($event['category'] == SERVICE_TYPES_XEN_LINUX || $event['category'] == SERVICE_TYPES_XEN_WINDOWS) {
+		if (in_array($event['type'], [SERVICE_TYPES_XEN_LINUX, SERVICE_TYPES_XEN_WINDOWS])) {
 			myadmin_log(self::$module, 'info', 'Xen Activation', __LINE__, __FILE__);
-			function_requirements('activate_xen');
-			activate_xen($serviceClass->getIp(), $event['field1']);
 			$event->stopPropagation();
 		}
 	}
 
 	public static function getDeactivate(GenericEvent $event) {
-		if ($event['category'] == SERVICE_TYPES_XEN_LINUX || $event['category'] == SERVICE_TYPES_XEN_WINDOWS) {
+		if (in_array($event['type'], [SERVICE_TYPES_XEN_LINUX, SERVICE_TYPES_XEN_WINDOWS])) {
 			myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__);
 			$serviceClass = $event->getSubject();
 			$GLOBALS['tf']->history->add(self::$module.'queue', $serviceClass->getId(), 'delete', '', $serviceClass->getCustid());
@@ -43,7 +42,7 @@ class Plugin {
 	}
 
 	public static function getChangeIp(GenericEvent $event) {
-		if ($event['category'] == SERVICE_TYPES_XEN_LINUX || $event['category'] == SERVICE_TYPES_XEN_WINDOWS) {
+		if (in_array($event['type'], [SERVICE_TYPES_XEN_LINUX, SERVICE_TYPES_XEN_WINDOWS])) {
 			$serviceClass = $event->getSubject();
 			$settings = get_module_settings(self::$module);
 			$xen = new Xen(FANTASTICO_USERNAME, FANTASTICO_PASSWORD);
