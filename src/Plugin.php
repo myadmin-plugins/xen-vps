@@ -87,8 +87,8 @@ class Plugin {
 	public static function getMenu(GenericEvent $event) {
 		$menu = $event->getSubject();
 		if ($GLOBALS['tf']->ima == 'admin') {
-			$menu->add_link(self::$module, 'choice=none.reusable_xen', 'icons/database_warning_48.png', 'ReUsable Xen Licenses');
-			$menu->add_link(self::$module, 'choice=none.xen_list', 'icons/database_warning_48.png', 'Xen Licenses Breakdown');
+			$menu->add_link(self::$module, 'choice=none.reusable_xen', 'images/icons/database_warning_48.png', 'ReUsable Xen Licenses');
+			$menu->add_link(self::$module, 'choice=none.xen_list', 'images/icons/database_warning_48.png', 'Xen Licenses Breakdown');
 			$menu->add_link(self::$module.'api', 'choice=none.xen_licenses_list', 'whm/createacct.gif', 'List all Xen Licenses');
 		}
 	}
