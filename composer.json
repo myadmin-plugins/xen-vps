@@ -34,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Detain\\MyAdminXen\\": "src\/"
+            "Detain\\MyAdminXen\\": "src/"
         }
     }
 }
