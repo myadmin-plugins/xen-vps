@@ -102,12 +102,12 @@ class Plugin {
 		$loader->add_requirement('crud_reusable_xen', '/../vendor/detain/crud/src/crud/crud_reusable_xen.php');
 		$loader->add_requirement('get_xen_licenses', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
 		$loader->add_requirement('get_xen_list', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
-		$loader->add_requirement('xen_licenses_list', '/../vendor/detain/myadmin-xen-vps/src/xen_licenses_list.php');
-		$loader->add_requirement('xen_list', '/../vendor/detain/myadmin-xen-vps/src/xen_list.php');
+		$loader->add_page_requirement('xen_licenses_list', '/../vendor/detain/myadmin-xen-vps/src/xen_licenses_list.php');
+		$loader->add_page_requirement('xen_list', '/../vendor/detain/myadmin-xen-vps/src/xen_list.php');
 		$loader->add_requirement('get_available_xen', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
 		$loader->add_requirement('activate_xen', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
 		$loader->add_requirement('get_reusable_xen', '/../vendor/detain/myadmin-xen-vps/src/xen.inc.php');
-		$loader->add_requirement('reusable_xen', '/../vendor/detain/myadmin-xen-vps/src/reusable_xen.php');
+		$loader->add_page_requirement('reusable_xen', '/../vendor/detain/myadmin-xen-vps/src/reusable_xen.php');
 		$loader->add_requirement('class.Xen', '/../vendor/detain/xen-vps/src/Xen.php');
 		$loader->add_requirement('vps_add_xen', '/vps/addons/vps_add_xen.php');
 	}
