@@ -422,7 +422,7 @@ class Plugin {
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
 	public static function getQueueResetPassword(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
+		if (in_array($event['type'], [get_service_define('XEN_WINDOWS')])) {
 			myadmin_log(self::$module, 'info', self::$name.' Queue Reset Password', __LINE__, __FILE__);
 			$serviceClass = $event->getSubject();
 			$smarty = new \TFSmarty();
