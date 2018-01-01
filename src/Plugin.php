@@ -148,18 +148,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/backup.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -175,18 +164,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/restore.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -202,18 +180,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/enable.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -229,18 +196,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/destroy.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -256,18 +212,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/delete.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -283,18 +228,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/reinstall_osupdate_hdsize.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -310,18 +244,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/enable_cd.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -337,18 +260,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/disable_cd.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -364,18 +276,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/insert_cd.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -391,18 +292,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/eject_cd.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -418,18 +308,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/start.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -445,18 +324,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/stop.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -472,18 +340,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/restart.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -499,18 +356,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/setup_vnc.sh.tpl');
 			$event->stopPropagation();
 		}
@@ -526,18 +372,7 @@ class Plugin {
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
-			$smarty->assign([
-				'vps_vzid' => is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid'],
-				'field1' => $extra['field1'],
-				'field2' => $extra['field2'],
-				'type' => $extra['type'],
-				'category' => $extra['category'],
-				'email' => $extra['email'],
-				'domain' => $extra['domain'],
-				'action' => $extra['action'],
-				'param' => $extra['param'],
-				'extra' => $extra['extra'],
-			]);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 			echo $smarty->fetch(__DIR__.'/../templates/reset_password.sh.tpl');
 			$event->stopPropagation();
 		}
