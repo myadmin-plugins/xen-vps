@@ -221,15 +221,31 @@ class Plugin {
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
-	public static function getQueueReinstallOsupdateHdsize(GenericEvent $event) {
+	public static function getQueueReinstallOs(GenericEvent $event) {
 		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Reinstall Osupdate Hdsize', __LINE__, __FILE__);
+			myadmin_log(self::$module, 'info', self::$name.' Queue Reinstall OsHdsize', __LINE__, __FILE__);
 			$vps = $event->getSubject();
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
 			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/reinstall_osupdate_hdsize.sh.tpl');
+			echo $smarty->fetch(__DIR__.'/../templates/reinstall_os.sh.tpl');
+			$event->stopPropagation();
+		}
+	}
+
+	/**
+	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
+	 */
+	public static function getQueueUpdateHdsize(GenericEvent $event) {
+		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
+			myadmin_log(self::$module, 'info', self::$name.' Queue Update Hdsize', __LINE__, __FILE__);
+			$vps = $event->getSubject();
+			$server_info = $vps['server_info'];
+			$smarty = new \TFSmarty();
+			$smarty->assign($vps);
+			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
+			echo $smarty->fetch(__DIR__.'/../templates/update_hdsize.sh.tpl');
 			$event->stopPropagation();
 		}
 	}
