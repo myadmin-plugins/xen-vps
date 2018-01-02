@@ -32,22 +32,7 @@ class Plugin {
 			self::$module.'.settings' => [__CLASS__, 'getSettings'],
 			//self::$module.'.activate' => [__CLASS__, 'getActivate'],
 			self::$module.'.deactivate' => [__CLASS__, 'getDeactivate'],
-			self::$module.'.queue_backup' => [__CLASS__, 'getQueueBackup'],
-			self::$module.'.queue_restore' => [__CLASS__, 'getQueueRestore'],
-			self::$module.'.queue_enable' => [__CLASS__, 'getQueueEnable'],
-			self::$module.'.queue_destroy' => [__CLASS__, 'getQueueDestroy'],
-			self::$module.'.queue_delete' => [__CLASS__, 'getQueueDelete'],
-			self::$module.'.queue_reinstall_os' => [__CLASS__, 'getQueueReinstallOs'],
-			self::$module.'.queue_update_hdsize' => [__CLASS__, 'getQueueUpdateHdsize'],
-			self::$module.'.queue_enable_cd' => [__CLASS__, 'getQueueEnableCd'],
-			self::$module.'.queue_disable_cd' => [__CLASS__, 'getQueueDisableCd'],
-			self::$module.'.queue_insert_cd' => [__CLASS__, 'getQueueInsertCd'],
-			self::$module.'.queue_eject_cd' => [__CLASS__, 'getQueueEjectCd'],
-			self::$module.'.queue_start' => [__CLASS__, 'getQueueStart'],
-			self::$module.'.queue_stop' => [__CLASS__, 'getQueueStop'],
-			self::$module.'.queue_restart' => [__CLASS__, 'getQueueRestart'],
-			self::$module.'.queue_setup_vnc' => [__CLASS__, 'getQueueSetupVnc'],
-			self::$module.'.queue_reset_password' => [__CLASS__, 'getQueueResetPassword'],
+			self::$module.'.queue' => [__CLASS__, 'getQueue'],
 		];
 	}
 
@@ -70,30 +55,6 @@ class Plugin {
 			myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__);
 			$serviceClass = $event->getSubject();
 			$GLOBALS['tf']->history->add(self::$module.'queue', $serviceClass->getId(), 'delete', '', $serviceClass->getCustid());
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getChangeIp(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			$serviceClass = $event->getSubject();
-			$settings = get_module_settings(self::$module);
-			$xen = new Xen(FANTASTICO_USERNAME, FANTASTICO_PASSWORD);
-			myadmin_log(self::$module, 'info', 'IP Change - (OLD:' .$serviceClass->getIp().") (NEW:{$event['newip']})", __LINE__, __FILE__);
-			$result = $xen->editIp($serviceClass->getIp(), $event['newip']);
-			if (isset($result['faultcode'])) {
-				myadmin_log(self::$module, 'error', 'Xen editIp('.$serviceClass->getIp().', '.$event['newip'].') returned Fault '.$result['faultcode'].': '.$result['fault'], __LINE__, __FILE__);
-				$event['status'] = 'error';
-				$event['status_text'] = 'Error Code '.$result['faultcode'].': '.$result['fault'];
-			} else {
-				$GLOBALS['tf']->history->add($settings['TABLE'], 'change_ip', $event['newip'], $serviceClass->getIp());
-				$serviceClass->set_ip($event['newip'])->save();
-				$event['status'] = 'ok';
-				$event['status_text'] = 'The IP Address has been changed.';
-			}
-			$event->stopPropagation();
 		}
 	}
 
@@ -141,257 +102,16 @@ class Plugin {
 	/**
 	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
 	 */
-	public static function getQueueBackup(GenericEvent $event) {
+	public static function getQueue(GenericEvent $event) {
 		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Backup', __LINE__, __FILE__);
 			$vps = $event->getSubject();
+			myadmin_log(self::$module, 'info', self::$name.' Queue '.ucwords(str_replace('_', ' ', $vps['action'])), __LINE__, __FILE__);
 			$server_info = $vps['server_info'];
 			$smarty = new \TFSmarty();
 			$smarty->assign($vps);
 			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/backup.sh.tpl');
+			echo $smarty->fetch(__DIR__.'/../templates/'.$vps['action'].'.sh.tpl');
 			$event->stopPropagation();
 		}
 	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueRestore(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Restore', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/restore.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueEnable(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Enable', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/enable.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueDestroy(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Destroy', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/destroy.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueDelete(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Delete', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/delete.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueReinstallOs(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Reinstall OsHdsize', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/reinstall_os.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueUpdateHdsize(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Update Hdsize', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/update_hdsize.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueEnableCd(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Enable Cd', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/enable_cd.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueDisableCd(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Disable Cd', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/disable_cd.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueInsertCd(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Insert Cd', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/insert_cd.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueEjectCd(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Eject Cd', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/eject_cd.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueStart(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Start', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/start.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueStop(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Stop', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/stop.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueRestart(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Restart', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/restart.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueSetupVnc(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Setup Vnc', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/setup_vnc.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
-	/**
-	 * @param \Symfony\Component\EventDispatcher\GenericEvent $event
-	 */
-	public static function getQueueResetPassword(GenericEvent $event) {
-		if (in_array($event['type'], [get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Queue Reset Password', __LINE__, __FILE__);
-			$vps = $event->getSubject();
-			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/reset_password.sh.tpl');
-			$event->stopPropagation();
-		}
-	}
-
 }
