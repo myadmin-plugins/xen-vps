@@ -74,13 +74,17 @@ class Plugin {
 	public static function getQueue(GenericEvent $event) {
 		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
 			$vps = $event->getSubject();
-			myadmin_log(self::$module, 'info', self::$name.' Queue '.ucwords(str_replace('_', ' ', $vps['action'])), __LINE__, __FILE__);
+			myadmin_log(self::$module, 'info', self::$name.' Queue '.ucwords(str_replace('_', ' ', $vps['action'])).' for VPS '.$vps['vps_hostname'].'(#'.$vps['vps_id'].'/'.$vps['vps_vzid'].')', __LINE__, __FILE__);
 			$server_info = $vps['server_info'];
-			$smarty = new \TFSmarty();
-			$smarty->assign($vps);
-			$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
-			echo $smarty->fetch(__DIR__.'/../templates/'.$vps['action'].'.sh.tpl');
-			$event->stopPropagation();
+			if (!file_exists(__DIR__.'/../templates/'.$vps['action'].'.sh.tpl')) {
+				myadmin_log(self::$module, 'error', 'Call '.$vps['action'].' for VPS '.$vps['vps_hostname'].'(#'.$vps['vps_id'].'/'.$vps['vps_vzid'].') Does not Exist for '.self::$name, __LINE__, __FILE__);
+			} else {
+				$smarty = new \TFSmarty();
+				$smarty->assign($vps);
+				$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
+				echo $smarty->fetch(__DIR__.'/../templates/'.$vps['action'].'.sh.tpl');
+				$event->stopPropagation();
+			}
 		}
 	}
 }
