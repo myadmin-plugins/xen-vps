@@ -10,4 +10,3 @@ virsh managedsave-remove {$vps_vzid};
 virsh undefine {$vps_vzid};
 kpartx -dv  /dev/vz/{$vps_vzid};
 echo y | lvremove /dev/vz/{$vps_vzid};
-vps_create
