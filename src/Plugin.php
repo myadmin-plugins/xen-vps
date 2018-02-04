@@ -83,8 +83,8 @@ class Plugin {
 				$smarty->assign($vps);
 				$smarty->assign('vps_vzid', is_numeric($vps['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$vps['vps_vzid'] : 'linux'.$vps['vps_vzid']) : $vps['vps_vzid']);
 				echo $smarty->fetch(__DIR__.'/../templates/'.$vps['action'].'.sh.tpl');
-				$event->stopPropagation();
 			}
+			$event->stopPropagation();
 		}
 	}
 }
