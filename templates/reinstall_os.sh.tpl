@@ -9,4 +9,4 @@ virsh autostart --disable {$vps_vzid};
 virsh managedsave-remove {$vps_vzid};
 virsh undefine {$vps_vzid};
 kpartx -dv  /dev/vz/{$vps_vzid};
-echo y | lvremove /dev/vz/{$vps_vzid};
+virsh vol-delete --pool vz {$vps_vzid};
