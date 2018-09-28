@@ -1,5 +1,5 @@
 {
-	"name": "detain/xen-vps",
+	"name": "detain/myadmin-xen-vps",
 	"type": "myadmin-plugin",
 	"description": "Xen Vps Class",
 	"keywords": [
