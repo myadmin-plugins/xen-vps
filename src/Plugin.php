@@ -71,9 +71,9 @@ class Plugin
          * @var \MyAdmin\Settings $settings
          **/
         $settings = $event->getSubject();
-		$settings->add_text_setting(self::$module, __('Slice Costs'), 'vps_slice_xen_cost', __('XEN VPS Cost Per Slice'), __('XEN VPS will cost this much for 1 slice.'), $settings->get_setting('VPS_SLICE_XEN_COST'));
-		$settings->add_select_master(__(self::$module), __('Default Servers'), self::$module, 'new_vps_xen_server', __('Xen NJ Server'), (defined('NEW_VPS_XEN_SERVER') ? NEW_VPS_XEN_SERVER : ''), 8, 1);
-		$settings->add_dropdown_setting(self::$module, __('Out of Stock'), 'outofstock_xen', __('Out Of Stock Xen Secaucus'), __('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_XEN'), ['0', '1'], ['No', 'Yes']);
+		$settings->add_text_setting(self::$module, _('Slice Costs'), 'vps_slice_xen_cost', _('XEN VPS Cost Per Slice'), _('XEN VPS will cost this much for 1 slice.'), $settings->get_setting('VPS_SLICE_XEN_COST'));
+		$settings->add_select_master(_(self::$module), _('Default Servers'), self::$module, 'new_vps_xen_server', _('Xen NJ Server'), (defined('NEW_VPS_XEN_SERVER') ? NEW_VPS_XEN_SERVER : ''), 8, 1);
+		$settings->add_dropdown_setting(self::$module, _('Out of Stock'), 'outofstock_xen', _('Out Of Stock Xen Secaucus'), _('Enable/Disable Sales Of This Type'), $settings->get_setting('OUTOFSTOCK_XEN'), ['0', '1'], ['No', 'Yes']);
 	}
 
 	/**
