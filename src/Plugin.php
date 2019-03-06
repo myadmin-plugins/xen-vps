@@ -45,7 +45,7 @@ class Plugin
 	{
 		$serviceClass = $event->getSubject();
 		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', 'Xen Activation', __LINE__, __FILE__);
+			myadmin_log(self::$module, 'info', 'Xen Activation', __LINE__, __FILE__, self::$module, $serviceClass->getId());
 			$event->stopPropagation();
 		}
 	}
@@ -56,7 +56,7 @@ class Plugin
 	public static function getDeactivate(GenericEvent $event)
 	{
 		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__);
+			myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__, self::$module, $serviceClass->getId());
 			$serviceClass = $event->getSubject();
 			$GLOBALS['tf']->history->add(self::$module.'queue', $serviceClass->getId(), 'delete', '', $serviceClass->getCustid());
 		}
