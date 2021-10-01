@@ -86,7 +86,6 @@ class Plugin
 		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
 			$serviceInfo = $event->getSubject();
 			$settings = get_module_settings(self::$module);
-			myadmin_log(self::$module, 'info', self::$name.' Queue '.ucwords(str_replace('_', ' ', $serviceInfo['action'])).' for VPS '.$serviceInfo['vps_hostname'].'(#'.$serviceInfo['vps_id'].'/'.$serviceInfo['vps_vzid'].')', __LINE__, __FILE__, self::$module, $serviceInfo[$settings['PREFIX'].'_id']);
 			$server_info = $serviceInfo['server_info'];
 			if (!file_exists(__DIR__.'/../templates/'.$serviceInfo['action'].'.sh.tpl')) {
 				myadmin_log(self::$module, 'error', 'Call '.$serviceInfo['action'].' for VPS '.$serviceInfo['vps_hostname'].'(#'.$serviceInfo['vps_id'].'/'.$serviceInfo['vps_vzid'].') Does not Exist for '.self::$name, __LINE__, __FILE__, self::$module, $serviceInfo[$settings['PREFIX'].'_id']);
@@ -94,7 +93,9 @@ class Plugin
 				$smarty = new \TFSmarty();
 				$smarty->assign($serviceInfo);
 				$smarty->assign('vps_vzid', is_numeric($serviceInfo['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$serviceInfo['vps_vzid'] : 'linux'.$serviceInfo['vps_vzid']) : $serviceInfo['vps_vzid']);
-				$event['output'] = $event['output'].$smarty->fetch(__DIR__.'/../templates/'.$serviceInfo['action'].'.sh.tpl');
+				$output = $smarty->fetch(__DIR__.'/../templates/'.$serviceInfo['action'].'.sh.tpl');
+				myadmin_log(self::$module, 'info', self::$name.' Queue '.ucwords(str_replace('_', ' ', $serviceInfo['action'])).' for '.strtoupper($settings['PREFIX']).' '.$serviceInfo['vps_hostname'].'(#'.$serviceInfo['vps_id'].'/'.$serviceInfo['vps_vzid'].'): '.$output, __LINE__, __FILE__, self::$module, $serviceInfo['vps_id']);
+				$event['output'] = $event['output'].$output;
 			}
 			$event->stopPropagation();
 		}
