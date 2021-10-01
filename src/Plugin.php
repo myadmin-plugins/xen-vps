@@ -45,7 +45,7 @@ class Plugin
 	{
 		$serviceClass = $event->getSubject();
 		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', 'Xen Activation', __LINE__, __FILE__, self::$module, $serviceClass->getId());
+			myadmin_log(self::$module, 'info', 'Xen Activation', __LINE__, __FILE__, self::$module, $serviceClass->getId(), true, false, $serviceClass->getCustid());
 			$event->stopPropagation();
 		}
 	}
@@ -56,7 +56,7 @@ class Plugin
 	public static function getDeactivate(GenericEvent $event)
 	{
 		if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-			myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__, self::$module, $serviceClass->getId());
+			myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__, self::$module, $serviceClass->getId(), true, false, $serviceClass->getCustid());
 			$serviceClass = $event->getSubject();
 			$GLOBALS['tf']->history->add(self::$module.'queue', $serviceClass->getId(), 'delete', '', $serviceClass->getCustid());
 		}
@@ -88,13 +88,13 @@ class Plugin
 			$settings = get_module_settings(self::$module);
 			$server_info = $serviceInfo['server_info'];
 			if (!file_exists(__DIR__.'/../templates/'.$serviceInfo['action'].'.sh.tpl')) {
-				myadmin_log(self::$module, 'error', 'Call '.$serviceInfo['action'].' for VPS '.$serviceInfo['vps_hostname'].'(#'.$serviceInfo['vps_id'].'/'.$serviceInfo['vps_vzid'].') Does not Exist for '.self::$name, __LINE__, __FILE__, self::$module, $serviceInfo[$settings['PREFIX'].'_id']);
+				myadmin_log(self::$module, 'error', 'Call '.$serviceInfo['action'].' for VPS '.$serviceInfo['vps_hostname'].'(#'.$serviceInfo['vps_id'].'/'.$serviceInfo['vps_vzid'].') Does not Exist for '.self::$name, __LINE__, __FILE__, self::$module, $serviceInfo[$settings['PREFIX'].'_id'], true, false, $serviceInfo[$settings['PREFIX'].'_custid']);
 			} else {
 				$smarty = new \TFSmarty();
 				$smarty->assign($serviceInfo);
 				$smarty->assign('vps_vzid', is_numeric($serviceInfo['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$serviceInfo['vps_vzid'] : 'linux'.$serviceInfo['vps_vzid']) : $serviceInfo['vps_vzid']);
 				$output = $smarty->fetch(__DIR__.'/../templates/'.$serviceInfo['action'].'.sh.tpl');
-				myadmin_log(self::$module, 'info', 'Queue '.$server_info[$settings['PREFIX'].'_name'].' '.$output, __LINE__, __FILE__, self::$module, $serviceInfo['vps_id']);
+				myadmin_log(self::$module, 'info', 'Queue '.$server_info[$settings['PREFIX'].'_name'].' '.$output, __LINE__, __FILE__, self::$module, $serviceInfo['vps_id'], true, false, $serviceInfo['vps_custid']);
 				$event['output'] = $event['output'].$output;
 			}
 			$event->stopPropagation();
