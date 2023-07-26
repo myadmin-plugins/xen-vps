@@ -91,7 +91,6 @@ class Plugin
                 myadmin_log(self::$module, 'error', 'Call '.$serviceInfo['action'].' for VPS '.$serviceInfo['vps_hostname'].'(#'.$serviceInfo['vps_id'].'/'.$serviceInfo['vps_vzid'].') Does not Exist for '.self::$name, __LINE__, __FILE__, self::$module, $serviceInfo[$settings['PREFIX'].'_id'], true, false, $serviceInfo[$settings['PREFIX'].'_custid']);
             } else {
                 $smarty = new \TFSmarty();
-		$smarty->registerPlugin('modifier', 'escapeshellarg', 'escapeshellarg');
                 $smarty->assign($serviceInfo);
                 $smarty->assign('vps_vzid', is_numeric($serviceInfo['vps_vzid']) ? (in_array($event['type'], [get_service_define('XEN_WINDOWS')]) ? 'windows'.$serviceInfo['vps_vzid'] : 'linux'.$serviceInfo['vps_vzid']) : $serviceInfo['vps_vzid']);
                 $output = $smarty->fetch(__DIR__.'/../templates/'.$serviceInfo['action'].'.sh.tpl');
