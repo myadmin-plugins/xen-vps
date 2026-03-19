@@ -1,28 +1,49 @@
-# Xen Vps Class
+# MyAdmin Xen VPS Plugin
 
-Xen Vps Class
+[![Tests](https://github.com/detain/myadmin-xen-vps/actions/workflows/tests.yml/badge.svg)](https://github.com/detain/myadmin-xen-vps/actions/workflows/tests.yml)
+[![Latest Stable Version](https://poser.pugx.org/detain/myadmin-xen-vps/version)](https://packagist.org/packages/detain/myadmin-xen-vps)
+[![Total Downloads](https://poser.pugx.org/detain/myadmin-xen-vps/downloads)](https://packagist.org/packages/detain/myadmin-xen-vps)
+[![License](https://poser.pugx.org/detain/myadmin-xen-vps/license)](https://packagist.org/packages/detain/myadmin-xen-vps)
 
-## Build Status and Code Analysis
+Event-driven MyAdmin plugin for provisioning, managing, and deactivating Xen hypervisor-based virtual private servers. Integrates with the Symfony EventDispatcher to handle VPS lifecycle events including activation, deactivation, settings configuration, and queue-based template rendering for server operations.
 
-Site          | Status
---------------|---------------------------
-![Travis-CI](http://i.is.cc/storage/GYd75qN.png "Travis-CI")     | [![Build Status](https://travis-ci.org/detain/myadmin-xen-vps.svg?branch=master)](https://travis-ci.org/detain/myadmin-xen-vps)
-![CodeClimate](http://i.is.cc/storage/GYlageh.png "CodeClimate")  | [![Code Climate](https://codeclimate.com/github/detain/myadmin-xen-vps/badges/gpa.svg)](https://codeclimate.com/github/detain/myadmin-xen-vps) [![Test Coverage](https://codeclimate.com/github/detain/myadmin-xen-vps/badges/coverage.svg)](https://codeclimate.com/github/detain/myadmin-xen-vps/coverage) [![Issue Count](https://codeclimate.com/github/detain/myadmin-xen-vps/badges/issue_count.svg)](https://codeclimate.com/github/detain/myadmin-xen-vps)
-![Scrutinizer](http://i.is.cc/storage/GYeUnux.png "Scrutinizer")   | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/myadmin-plugins/xen-vps/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/xen-vps/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/myadmin-plugins/xen-vps/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/xen-vps/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/myadmin-plugins/xen-vps/badges/build.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/xen-vps/build-status/master)
-![Codacy](http://i.is.cc/storage/GYi66Cx.png "Codacy")        | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/226251fc068f4fd5b4b4ef9a40011d06)](https://www.codacy.com/app/detain/myadmin-xen-vps) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/25fa74eb74c947bf969602fcfe87e349)](https://www.codacy.com/app/detain/myadmin-xen-vps?utm_source=github.com&utm_medium=referral&utm_content=detain/myadmin-xen-vps&utm_campaign=Badge_Coverage)
-![Coveralls](http://i.is.cc/storage/GYjNSim.png "Coveralls")    | [![Coverage Status](https://coveralls.io/repos/github/detain/db_abstraction/badge.svg?branch=master)](https://coveralls.io/github/detain/myadmin-xen-vps?branch=master)
-![Packagist](http://i.is.cc/storage/GYacBEX.png "Packagist")     | [![Latest Stable Version](https://poser.pugx.org/detain/myadmin-xen-vps/version)](https://packagist.org/packages/detain/myadmin-xen-vps) [![Total Downloads](https://poser.pugx.org/detain/myadmin-xen-vps/downloads)](https://packagist.org/packages/detain/myadmin-xen-vps) [![Latest Unstable Version](https://poser.pugx.org/detain/myadmin-xen-vps/v/unstable)](//packagist.org/packages/detain/myadmin-xen-vps) [![Monthly Downloads](https://poser.pugx.org/detain/myadmin-xen-vps/d/monthly)](https://packagist.org/packages/detain/myadmin-xen-vps) [![Daily Downloads](https://poser.pugx.org/detain/myadmin-xen-vps/d/daily)](https://packagist.org/packages/detain/myadmin-xen-vps) [![License](https://poser.pugx.org/detain/myadmin-xen-vps/license)](https://packagist.org/packages/detain/myadmin-xen-vps)
+## Features
 
+- Xen Linux and Xen Windows VPS provisioning support
+- Event-driven architecture using Symfony EventDispatcher
+- Template-based queue processing for server operations (start, stop, restart, backup, restore, etc.)
+- Configurable slice-based pricing and server assignment
+- Out-of-stock toggle for sales management
+
+## Requirements
+
+- PHP 8.2 or higher
+- ext-soap
+- Symfony EventDispatcher 5.x, 6.x, or 7.x
 
 ## Installation
-
-Install with composer like
 
 ```sh
 composer require detain/myadmin-xen-vps
 ```
 
+## Usage
+
+The plugin registers event hooks for the `vps` module automatically:
+
+| Hook              | Handler         | Description                              |
+|-------------------|-----------------|------------------------------------------|
+| `vps.settings`    | `getSettings`   | Registers Xen VPS configuration options  |
+| `vps.deactivate`  | `getDeactivate` | Handles VPS deactivation and cleanup     |
+| `vps.queue`       | `getQueue`      | Processes queued server operations        |
+
+## Running Tests
+
+```sh
+composer install
+vendor/bin/phpunit
+```
+
 ## License
 
-The Xen Vps Class class is licensed under the LGPL-v2.1 license.
-
+Licensed under the LGPL-2.1. See [LICENSE](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html) for details.
