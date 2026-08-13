@@ -55,7 +55,6 @@ caliber refresh
 git add CLAUDE.md .claude/ AGENTS.md 2>/dev/null
 ```
 
-<!-- caliber:managed:pre-commit -->
 ## Plugin contract harness
 
 This package is on the shared contract harness from `detain/myadmin-plugin-installer`.
@@ -78,6 +77,7 @@ contract class primes constants and calls `register_module()`, neither of which 
 See the `plugin-contract-tests` skill for the full workflow, and `docs/testing-harness.md` in
 the installer.
 
+<!-- caliber:managed:pre-commit -->
 ## Before Committing
 
 **IMPORTANT:** Before every git commit, you MUST ensure Caliber syncs agent configs with the latest code changes.
