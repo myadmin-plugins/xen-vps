@@ -56,8 +56,8 @@ class Plugin
     public static function getDeactivate(GenericEvent $event)
     {
         if (in_array($event['type'], [get_service_define('XEN_LINUX'), get_service_define('XEN_WINDOWS')])) {
-            myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__, self::$module, $serviceClass->getId(), true, false, $serviceClass->getCustid());
             $serviceClass = $event->getSubject();
+            myadmin_log(self::$module, 'info', self::$name.' Deactivation', __LINE__, __FILE__, self::$module, $serviceClass->getId(), true, false, $serviceClass->getCustid());
             \MyAdmin\App::history()->add(self::$module.'queue', $serviceClass->getId(), 'delete', '', $serviceClass->getCustid());
         }
     }
