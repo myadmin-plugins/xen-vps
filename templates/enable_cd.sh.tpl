@@ -2,9 +2,15 @@ export PATH="$PATH:/usr/sbin:/sbin:/bin:/usr/bin:";
 export cd_max=60;
 echo "    <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>" > /tmp/cd{$vps_vzid}.xml;
-if [ {$param} != "" ]; then
-    wget -O /tmp/cd{$vps_vzid}.iso {$param};
-    echo "	  <source file='/tmp/cd{$vps_vzid}.iso'/>" >> /tmp/cd{$vps_vzid}.xml;
+if [ {$param|escapeshellarg} != "" ]; then
+    rm -f /tmp/cd{$vps_vzid}.iso;
+    curl --fail --silent --show-error --proto =http,https,ftp,ftps --connect-timeout 30 --max-time 7200 {$param|escapeshellarg} | head -c 17179869185 > /tmp/cd{$vps_vzid}.iso;
+    if [ -s /tmp/cd{$vps_vzid}.iso ] && [ "$(stat -c %s /tmp/cd{$vps_vzid}.iso)" -le 17179869184 ]; then
+        echo "	  <source file='/tmp/cd{$vps_vzid}.iso'/>" >> /tmp/cd{$vps_vzid}.xml;
+    else
+        rm -f /tmp/cd{$vps_vzid}.iso;
+        echo "CD image download failed, timed out or was over 16GB";
+    fi;
 fi;
 echo "	  <target dev='hdc' bus='ide'/>
       <readonly/>
